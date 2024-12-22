@@ -1,94 +1,133 @@
-# Obsidian Sample Plugin
+# Obsidian Github Discussions
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+A plugin for Obsidian that enables bi-directional syncing between your Obsidian vault and Github Discussions. Perfect for managing a blog or documentation using Obsidian while publishing to Github Discussions. When used with the [github-discussions-blog-loader](https://github.com/mattbrailsford/github-discussions-blog-loader) for Astro, you get a complete blog publishing workflow: write in Obsidian, sync to Github Discussions, and automatically publish to your Astro-powered website!
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+## Features
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+- **Two-way Sync**: Upload your Obsidian markdown files to Github Discussions and download Github Discussions back to your vault
+- **Frontmatter Support**: Maintains metadata including tags, series, publication dates, and descriptions
+- **Label Management**: Automatically creates and manages Github labels for tags and series
+- **Granular Control**: Choose what to sync with confirmation dialogs for:
+  - Creating new discussions
+  - Updating frontmatter and labels
+  - Updating discussion content
+- **Make.md Compatibility**: Optional support for Make.md plugin
 
-## First time developing plugins?
+## Installation
 
-Quick starting guide for new plugin devs:
+1. In Obsidian, go to Settings > Community Plugins
+2. Disable Safe Mode
+3. Click "Browse" and search for "Github Discussions"
+4. Install the plugin
+5. Enable the plugin in your list of installed plugins
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+## Configuration
 
-## Releasing new releases
+### Required Settings
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+1. **Github Token**: Set an environment variable named `OGD_GITHUB_TOKEN` with your Github Personal Access Token
+   - Token needs permissions for: `read:org`, `repo`, `write:discussion`
+   - [How to create a Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+2. **Plugin Settings**:
+   - **Blog Articles Directory**: Select the folder containing your blog posts
+   - **Repo Owner**: Your Github username or organization name
+   - **Repo Name**: The repository where discussions will be created/updated
 
-## Adding your plugin to the community plugin list
+### Optional Settings
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+- **Make MD Plugin Installed**: Toggle if you're using the Make.md plugin
+- **Blog Post Category**: Name of the Github Discussions category (default: "Blog Posts")
+- **Draft Label**: Label for draft posts (default: "state/draft")
+- **Tag Label Prefix**: Prefix for tag labels (default: "tag/")
+- **Series Label Prefix**: Prefix for series labels (default: "series/")
 
-## How to use
+## Usage
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+### Required Frontmatter
 
-## Manually installing the plugin
+Each markdown file needs at least the following frontmatter:
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+```yaml
+---
+slug: unique-post-identifier
+published: MM/DD/YYYY
+description: A brief description of your post
+tags: [optional, tags]
+series: optional-series-name
+---
 ```
 
-If you have multiple URLs, you can also do:
+### Uploading to Github
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+1. Click the "Upload" icon (arrow up) in the left ribbon
+2. Confirm when prompted to:
+   - Create new discussions for new files
+   - Update frontmatter and labels for existing discussions
+   - Update content for existing discussions
 
-## API Documentation
+### Downloading from Github
 
-See https://github.com/obsidianmd/obsidian-api
+1. Click the "Download" icon (arrow down) in the left ribbon
+2. Confirm when prompted to:
+   - Create new files for new discussions
+   - Update frontmatter in existing files
+   - Update content in existing files
+
+## How It Works
+
+- The plugin matches files and discussions using the `slug` in frontmatter
+- When uploading:
+  - New files become new discussions
+  - Tags become Github labels with your configured prefix
+  - Series become Github labels with your configured prefix
+  - All metadata is stored in the discussion's frontmatter
+- When downloading:
+  - New discussions become new files
+  - Github labels are converted back to tags and series
+  - Frontmatter and content can be selectively updated
+
+## Notes
+
+- Ensure your Github repository has Discussions enabled
+- Create your desired Discussion category before using the plugin
+- The plugin respects existing file structures and won't override files without confirmation
+- Labels in Github Discussions are replaced, not just added, to ensure sync accuracy
+
+## Development
+
+This plugin is open source. To contribute:
+
+1. Clone the repository
+2. Run `npm install`
+3. Run `npm run dev` to start compilation in watch mode
+4. Create a symbolic link from the repository to your Obsidian plugins folder
+
+## Support
+
+If you encounter any issues or have suggestions:
+
+1. Check the existing issues on Github
+2. Create a new issue with:
+   - A clear description of the problem
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Your Obsidian and plugin versions
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Changelog
+
+### 1.0.0
+- Initial release
+- Basic upload/download functionality
+- Frontmatter and label syncing
+- Make.md compatibility
+
+## Acknowledgements
+
+Thanks to all contributors and the Obsidian community for feedback and support.
+
+This plugin is designed to work in conjunction with [github-discussions-blog-loader](https://github.com/mattbrailsford/github-discussions-blog-loader), an Astro content loader that lets you publish Github Discussion posts to your website! Together, these tools form a complete workflow: write in Obsidian, sync to Github Discussions, and publish to your Astro-powered website.
