@@ -1,7 +1,5 @@
 import {
 	App,
-	Editor,
-	MarkdownView,
 	Modal,
 	Notice,
 	parseYaml,
@@ -13,16 +11,14 @@ import {
 	TFolder
 } from 'obsidian';
 import {githubClient} from './client';
-import type {GitHubPost, GitHubClientOptions} from './types';
+import type {GitHubClientOptions, GitHubPost} from './types';
 import {
-	SEARCH_POSTS_QUERY,
-	CREATE_DISCUSSION_MUTATION,
-	UPDATE_DISCUSSION_MUTATION,
-	CREATE_LABEL_MUTATION,
 	ADD_LABELS_TO_DISCUSSION,
-	GET_REPOSITORY_INFO
+	CREATE_DISCUSSION_MUTATION,
+	CREATE_LABEL_MUTATION,
+	GET_REPOSITORY_INFO,
+	UPDATE_DISCUSSION_MUTATION
 } from './graphql';
-import slugify from "slugify";
 
 // Remember to rename these classes and interfaces!
 const GITHUB_TOKEN = process.env.OGD_GITHUB_TOKEN;
@@ -160,9 +156,7 @@ async function fetchGithubDiscussions(
 		const client = githubClient(clientOptions);
 
 		// Fetch all posts
-		const posts = await client.getAllPosts(options.lastModified);
-
-		return posts;
+		return await client.getAllPosts(options.lastModified);
 	} catch (error) {
 		if (error instanceof Error) {
 			throw new Error(`Failed to fetch GitHub discussions: ${error.message}`);
