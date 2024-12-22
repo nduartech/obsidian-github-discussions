@@ -82,33 +82,45 @@ async function executeGitHubGraphQL(query: string, variables: any, token: string
 }
 
 async function createOrUpdateLabels(
-	repoId: string,
-	existingLabels: Map<string, string>,
-	labelNames: string[],
-	token: string
+    repoId: string,
+    existingLabels: Map<string, string>,
+    labelNames: string[],
+    token: string
 ): Promise<Map<string, string>> {
-	const labelIds = new Map<string, string>();
+    const labelIds = new Map<string, string>();
 
-	for (const labelName of labelNames) {
-		if (existingLabels.has(labelName)) {
-			labelIds.set(labelName, existingLabels.get(labelName)!);
-			continue;
-		}
+    for (const labelName of labelNames) {
+        if (existingLabels.has(labelName)) {
+            labelIds.set(labelName, existingLabels.get(labelName)!);
+            continue;
+        }
 
-		const result = await executeGitHubGraphQL(
-			CREATE_LABEL_MUTATION,
-			{
-				repositoryId: repoId,
-				name: labelName,
-				description: labelName.startsWith('series/') ? labelName.replace('series/', '') : undefined
-			},
-			token
-		);
+        // Set color based on label type
+        let color;
+        if (labelName.startsWith('series/')) {
+            color = '0E8A16'; // Green for series labels
+        } else if (labelName.startsWith('tag/')) {
+            color = '1D76DB'; // Blue for tag labels
+        } else {
+            // Default color for any other labels (using a neutral gray)
+            color = '666666';
+        }
 
-		labelIds.set(labelName, result.createLabel.label.id);
-	}
+        const result = await executeGitHubGraphQL(
+            CREATE_LABEL_MUTATION,
+            {
+                repositoryId: repoId,
+                name: labelName,
+                description: labelName.startsWith('series/') ? labelName.replace('series/', '') : undefined,
+                color: color
+            },
+            token
+        );
 
-	return labelIds;
+        labelIds.set(labelName, result.createLabel.label.id);
+    }
+
+    return labelIds;
 }
 
 /**

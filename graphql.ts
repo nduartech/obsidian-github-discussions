@@ -75,11 +75,12 @@ export const UPDATE_DISCUSSION_MUTATION = `
 `;
 
 export const CREATE_LABEL_MUTATION = `
-  mutation CreateLabel($repositoryId: ID!, $name: String!, $description: String) {
+  mutation CreateLabel($repositoryId: ID!, $name: String!, $description: String, $color: String!) {
     createLabel(input: {
       repositoryId: $repositoryId,
       name: $name,
-      description: $description
+      description: $description,
+      color: $color
     }) {
       label {
         id
