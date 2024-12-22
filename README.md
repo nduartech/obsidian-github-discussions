@@ -98,10 +98,9 @@ series: optional-series-name
 
 This plugin is open source. To contribute:
 
-1. Clone the repository
+1. Clone the repository to your Obsidian plugins folder and open it in a terminal
 2. Run `npm install`
 3. Run `npm run dev` to start compilation in watch mode
-4. Create a symbolic link from the repository to your Obsidian plugins folder
 
 ## Support
 
@@ -113,6 +112,7 @@ If you encounter any issues or have suggestions:
    - Steps to reproduce
    - Expected vs actual behavior
    - Your Obsidian and plugin versions
+3. Try to fix the issue yourself and create a PR. This project will not be maintained necessarily. 
 
 ## License
 
