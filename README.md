@@ -130,4 +130,4 @@ MIT License - see LICENSE file for details
 
 Thanks to all contributors and the Obsidian community for feedback and support.
 
-This plugin is designed to work in conjunction with [github-discussions-blog-loader](https://github.com/mattbrailsford/github-discussions-blog-loader), an Astro content loader that lets you publish Github Discussion posts to your website! Together, these tools form a complete workflow: write in Obsidian, sync to Github Discussions, and publish to your Astro-powered website.
+This plugin is designed to work in conjunction with [github-discussions-blog-loader](https://github.com/mattbrailsford/github-discussions-blog-loader), an Astro content loader that lets you publish Github Discussion posts to your website! Together, these tools form a complete workflow: write in Obsidian, sync to Github Discussions, and publish to your Astro-powered website. NOTE: Image uploading was a feature I could not quite get to work, so to add images to your articles you may have to do that step in Github Discussions. That said, once you do, you can pull the articles down to Obsidian.
