@@ -276,7 +276,7 @@ export default class ObsidianGithubDiscussions extends Plugin {
                 new OGDModal(this.app, `Create ${newFiles.length} new discussions from local files?`, async (result) => {
                     if (result) {
                         for (const { file, frontMatter, sections } of newFiles) {
-                            const body = sections[2].trim();
+                            const body = sections.slice(2).join("---").trim();
                             const labels: string[] = [];
                             if (frontMatter.tags) {
                                 labels.push(...frontMatter.tags.map((tag: string) =>
@@ -424,7 +424,7 @@ export default class ObsidianGithubDiscussions extends Plugin {
                             });
 
                             if (existingPost) {
-                                const body = sections[2].trim();
+                                const body = sections.slice(2).join("---").trim();
 
                                 // Prepare frontmatter for GitHub
                                 const githubFrontMatter = {
@@ -483,7 +483,7 @@ export default class ObsidianGithubDiscussions extends Plugin {
 					const ghArticleMap = new Map<string, any>();
 					ghArticles.forEach(article => {
 						const frontMatterString = article.body.split("---")[1];
-						const body = article.body.split("---")[2];
+						const body = article.body.split("---").slice(2).join("---").trim();
 						const frontMatter = parseYaml(frontMatterString);
 						const tags = article.tags;
 						const series = article.series;
